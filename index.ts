@@ -97,7 +97,7 @@ class FlappyBirdBrowserView {
       groundSrc = "ground.png",
       birdSrc = "bird.png",
       fontSrc = "font.woff",
-      debug = true,
+      debug = false,
     } = opts;
 
     const canvas = document.getElementById(
@@ -448,7 +448,7 @@ class ScoreManager {
     previousGameState: FlappyBirdGameState,
     currentGameState: FlappyBirdGameState
   ): boolean {
-    if(currentGameState.pipePairs[0].x < 300 && previousGameState.pipePairs[0].x < 300)
+    if((currentGameState.pipePairs).length != (previousGameState.pipePairs).length)
     {
       return true;
     }
@@ -663,7 +663,7 @@ async function main() {
     canvasId: "flappy-canvas",
     groundHeight: 128,
     groundVx: -3,
-    debug: true,
+    debug: false,
   });
   new FlappyBirdPresenter(model, view);
 }

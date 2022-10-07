@@ -167,7 +167,7 @@ var FlappyBirdBrowserView = /** @class */ (function () {
             return __generator(this, function (_g) {
                 switch (_g.label) {
                     case 0:
-                        canvasId = opts.canvasId, groundHeight = opts.groundHeight, groundVx = opts.groundVx, _a = opts.pipeSrc, pipeSrc = _a === void 0 ? "pipe.png" : _a, _b = opts.backgroundSrc, backgroundSrc = _b === void 0 ? "background.png" : _b, _c = opts.groundSrc, groundSrc = _c === void 0 ? "ground.png" : _c, _d = opts.birdSrc, birdSrc = _d === void 0 ? "bird.png" : _d, _e = opts.fontSrc, fontSrc = _e === void 0 ? "font.woff" : _e, _f = opts.debug, debug = _f === void 0 ? true : _f;
+                        canvasId = opts.canvasId, groundHeight = opts.groundHeight, groundVx = opts.groundVx, _a = opts.pipeSrc, pipeSrc = _a === void 0 ? "pipe.png" : _a, _b = opts.backgroundSrc, backgroundSrc = _b === void 0 ? "background.png" : _b, _c = opts.groundSrc, groundSrc = _c === void 0 ? "ground.png" : _c, _d = opts.birdSrc, birdSrc = _d === void 0 ? "bird.png" : _d, _e = opts.fontSrc, fontSrc = _e === void 0 ? "font.woff" : _e, _f = opts.debug, debug = _f === void 0 ? false : _f;
                         canvas = document.getElementById(canvasId);
                         ctx = canvas === null || canvas === void 0 ? void 0 : canvas.getContext("2d");
                         if (canvas == null || ctx == null) {
@@ -324,7 +324,7 @@ var ScoreManager = /** @class */ (function () {
         }
     };
     ScoreManager.prototype.shouldUpdateScore = function (previousGameState, currentGameState) {
-        if (currentGameState.pipePairs[0].x < 300 && previousGameState.pipePairs[0].x < 300) {
+        if ((currentGameState.pipePairs).length != (previousGameState.pipePairs).length) {
             return true;
         }
         return false;
@@ -488,7 +488,7 @@ function main() {
                             canvasId: "flappy-canvas",
                             groundHeight: 128,
                             groundVx: -3,
-                            debug: true
+                            debug: false
                         })];
                 case 1:
                     view = _a.sent();
