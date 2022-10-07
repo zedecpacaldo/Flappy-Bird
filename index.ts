@@ -97,7 +97,7 @@ class FlappyBirdBrowserView {
       groundSrc = "ground.png",
       birdSrc = "bird.png",
       fontSrc = "font.woff",
-      debug = false,
+      debug = true,
     } = opts;
 
     const canvas = document.getElementById(
@@ -188,7 +188,7 @@ class FlappyBirdBrowserView {
     this.tickHandlers.forEach((f) => f(this));
 
     if (!this.isTickingPaused) {
-      //window.requestAnimationFrame(this.tickHandler);
+      window.requestAnimationFrame(this.tickHandler);
     }
   };
 
@@ -353,13 +353,20 @@ class CollisionDetector implements GameOverConditionDetector {
   }
 
   hasCollidedWithAny(
-    bird: Bird,
-    pairs: PipePair[],
+    bird: Bird,                                                           
+    pairs: PipePair[],            
     screenHeight: number,
     groundHeight: number
   ): boolean {
-    // FIXME: Implement this
-    return false;
+    for(let pipe of pairs) { 
+      if(bird.y < 0 && bird.x + 35 >= pipe.x) {
+        return true;
+      }
+      if(this.hasCollidedWith(bird, pipe.x + pipe.width/2, pipe.topHeight/2, pipe.width, pipe.topHeight) || this.hasCollidedWith(bird, pipe.x + pipe.width/2, screenHeight-(groundHeight + pipe.bottomHeight/2), pipe.width, pipe.bottomHeight)) {
+        return true;                                                                                      
+      }
+    }
+    return false;                                                                                        
   }
 
   hasCollidedWith(
@@ -369,8 +376,19 @@ class CollisionDetector implements GameOverConditionDetector {
     pipeWidth: number,
     pipeHeight: number
   ): boolean {
-    // FIXME: Implement this
-    return false;
+    var circleDistanceX = Math.abs(bird.x - pipeX);
+    var circleDistanceY = Math.abs(bird.y - pipeY);
+
+    if (circleDistanceX > (pipeWidth/2 + 35)) { return false; }
+    if (circleDistanceY > (pipeHeight/2 + 35)) { return false; }
+
+    if (circleDistanceX <= (pipeWidth/2)) { return true; }
+    if (circleDistanceY <= (pipeHeight/2)) { return true; }
+
+    var cornerDistance_sq = (circleDistanceX - pipeWidth/2)**2 +
+    (circleDistanceY - pipeHeight/2)**2;
+
+    return (cornerDistance_sq <= (35**2));;
   }
 }
 
@@ -413,22 +431,27 @@ class ScoreManager {
   private _score = 0;
 
   get score() {
-    // FIXME: Implement this
-    return 0;
+    return this._score;
   }
 
   updateScoreIfNeeded(
     previousGameState: FlappyBirdGameState,
     currentGameState: FlappyBirdGameState
   ): void {
-    // FIXME: Implement this
+    if(this.shouldUpdateScore(previousGameState, currentGameState)){
+      this._score++;
+      return;
+    }
   }
 
   shouldUpdateScore(
     previousGameState: FlappyBirdGameState,
     currentGameState: FlappyBirdGameState
   ): boolean {
-    // FIXME: Implement this
+    if(currentGameState.pipePairs[0].x < 300 && previousGameState.pipePairs[0].x < 300)
+    {
+      return true;
+    }
     return false;
   }
 
@@ -625,12 +648,12 @@ class FlappyBirdPresenter {
   };
 
   handleJump = () => {
-    //if (this.model.isGameOver()) {
-    //  this.model.reset();
-    //  this.view.unpauseTicking();
-    //} else {
-    //  this.model.triggerJump();
-    //}
+    if (this.model.isGameOver()) {
+     this.model.reset();
+     this.view.unpauseTicking();
+    } else {
+     this.model.triggerJump();
+    }
   };
 }
 
@@ -640,7 +663,7 @@ async function main() {
     canvasId: "flappy-canvas",
     groundHeight: 128,
     groundVx: -3,
-    //debug: true,
+    debug: true,
   });
   new FlappyBirdPresenter(model, view);
 }
